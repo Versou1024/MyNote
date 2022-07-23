@@ -1,6 +1,8 @@
-===================================== 使用指南/售后流程/常见问题 =====================================
--- website 菜单
+# 使用指南/售后流程/常见问题
+## sql 变更
 
+``` sql 
+-- website 菜单
 INSERT INTO website.t_sys_menu (id,resource_key,parent_id,url,request_type,title,`level`,sort_no,icon,`type`,remarks,deleted,create_time,update_time,authorize_type) VALUES
 	 ('1200','useGuide','ce9602186d2a7f65267c94a16499f123','useGuide','NONE','使用指南',2,2,NULL,'menu',NULL,0,'2022-03-14 16:59:23','2022-03-14 16:59:23',0),
 	 ('1201','commonQuestion','ce9602186d2a7f65267c94a16499f123','commonQuestion','NONE','常见问题',2,3,NULL,'menu',NULL,0,'2022-03-14 16:59:23','2022-03-14 16:59:23',0),
@@ -126,21 +128,13 @@ CREATE TABLE `t_website_word_statistics` (
   PRIMARY KEY (`id`),
   KEY `idx_title` (`search_count`) USING BTREE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='官网搜索词统计表';
+```
+---
 
+# 新闻中心
+## SQL变更
 
---- 注意：Qa 环境
-
-===================================== 新闻中心 =====================================
--- 需求
-
-
--- 进度
-
-
--- 问题
-
--- SQL
-
+``` sql
 INSERT INTO website.t_sys_menu (id,resource_key,parent_id,url,request_type,title,`level`,sort_no,icon,`type`,remarks,deleted,create_time,update_time,authorize_type) VALUES
 	 ('1500','newsManagement','0','newsManagement','NONE','新闻中心',1,4,NULL,'menu',NULL,0,'2022-04-25 11:12:12','2022-04-25 11:12:12',0),
 	 ('1600','companyNews','1500','companyNews','NONE','公司新闻',1,1,NULL,'menu',NULL,0,'2022-04-28 15:47:27','2022-07-06 14:37:01',0),
@@ -167,9 +161,10 @@ CREATE TABLE `t_website_news` (
   PRIMARY KEY (`id`),
   KEY `idx_releaseStatus_deleted_releaseTime` (`release_status`,`deleted`,`release_time`) USING BTREE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='官网新闻基本信息表';
+```
 
-===================================== SE升级 =====================================
--- config修改
+## SE升级
+``` yaml
 jasypt:
   encryptor:
     algorithm: {{db.db_auxiliary.algorithm}}
@@ -187,3 +182,5 @@ spring:
       datasource:
         primary:
           jdbc-url: jdbc:mysql://{{db.db_auxiliary.url}}/website?serverTimezone=GMT%2B8&useSSL=false&zeroDateTimeBehavior=convertToNull&socketTimeout=60000&autoReconnect=true&maxReconnects=15&useUnicode=true&characterEncoding=utf8
+```
+

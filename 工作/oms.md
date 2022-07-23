@@ -1,6 +1,7 @@
-===================================== 个人云会议室迁移 =====================================
--- 整理
-#
+# 个人云会议室迁移
+
+## 梳理逻辑
+<pre>
 云会议室配置
     smartMutePerson         （智能静音，取值：true|false）
     chiefDeviceId           （主设备ID，取值：true|false）
@@ -11,7 +12,6 @@
     subtitle                （同传字幕显示，取值：true|false）
     meetingMode             （远真模式，取值：0-正常|1-远真）       --   特殊
     enableDirect            （导播功能，取值：true|false）
-
 
 云会议室可见性配置[控制终端是否显示该配置项]
     transcription                   （会议纪要，取值：true|false）
@@ -25,10 +25,10 @@
     translate                       （同声传译：true/false）
     hideWatermark                   （暗水印开关：true/false）
     showTranscriptionInMeeting      （入会开启会议纪要：true/false）
+</pre>
 
-
-
-
+## SQL变更
+``` sql
 INSERT INTO oms.t_sys_menu (id,resource_key,parent_id,url,request_type,title,`level`,sort_no,icon,`type`,remarks,deleted,gmt_create,gmt_modified) VALUES
 	 (1539138785910980609,'personConferenceManage',17,'/api/rest/oms/external/conference/config/manage','GET','个人云会议室配置',1,18,NULL,'menu',NULL,0,'2022-06-21 14:50:57','2022-06-21 16:25:20'),
 	 (1539138785952923649,'',1539138785910980609,'/api/rest/oms/external/conference/config/manage/**',NULL,'个人云会议室配置-按钮',NULL,NULL,NULL,'button',NULL,0,'2022-06-21 14:50:57','2022-06-21 14:50:57');
@@ -74,45 +74,22 @@ INSERT INTO oms.oms_t_config (id,setting_type,config_name,config_key,config_valu
 	 (2455444820502773028,'conference_operate_config','配置值','meetingMode_value','{"0":"关闭","1":"开启"}','0','select','','','','["meetingMode"]','2455444820502773026',0,0,'2022-06-23 17:15:00','2022-07-06 16:01:22',1,'oms',0),
 	 (2455444820502773029,'conference_operate_config','远真通道数量','channelCount','','0','inputNumber','','[{"pattern":"^\\\\d+$","message":"请输入非负整数"}]','[{"key": "meetingMode_value","value": "0"}]','','2455444820502773026',0,0,'2022-06-23 17:15:00','2022-07-04 18:45:41',1,'oms',0);
 
--- 进度
-    个人云会议室需要迁移到私有云模块上
-
 -- 菜单：是否需要修改
-
-INSERT INTO oms.t_sys_menu (id,resource_key,parent_id,url,request_type,title,`level`,sort_no,icon,`type`,remarks,deleted,gmt_create,gmt_modified) VALUES
-	 (1523596353794473986,'SDKChargeConfig',17,'/api/rest/oms/external/sdk/chargeConfig',NULL,'SDK计费配置',1,16,NULL,'menu',NULL,0,'2022-05-09 17:30:52','2022-05-09 17:48:09'),
-	 (1523596353807056897,'',1523596353794473986,'/api/rest/oms/external/sdk/chargeConfig/**',NULL,'SDK计费配置-按钮',NULL,NULL,NULL,'button',NULL,0,'2022-05-09 17:30:52','2022-05-09 17:30:52'),
-	 (1528568659889356801,'',1523596353794473986,'/api/rest/oms/external/winSdk/4k8k/**',NULL,'4k8k充值-按钮',NULL,NULL,NULL,'button',NULL,0,'2022-05-23 10:49:02','2022-07-11 14:07:12'),
-	 (1539180121783533569,'',1523596353794473986,'/api/rest/oms/external/audio/push/stream/**',NULL,'音视频推流计费-按钮',NULL,NULL,NULL,'button',NULL,0,'2022-06-21 17:35:12','2022-07-11 14:07:12');
-
-
 INSERT INTO oms.t_sys_menu (id,resource_key,parent_id,url,request_type,title,`level`,sort_no,icon,`type`,remarks,deleted,gmt_create,gmt_modified) VALUES
 	 (1523596353794473986,'SDKChargeConfig',17,'/api/rest/oms/external/sdk/chargeConfig',NULL,'SDK计费配置',1,14,NULL,'menu',NULL,0,'2022-05-09 17:30:52','2022-05-09 17:48:09'),
 	 (1523596353807056897,'',1523596353794473986,'/api/rest/oms/external/sdk/chargeConfig/**',NULL,'SDK计费配置-按钮',NULL,NULL,NULL,'button',NULL,0,'2022-05-09 17:30:52','2022-05-09 17:30:52'),
 	 (1528568659889356801,'',1523596353794473986,'/api/rest/oms/external/winSdk/4k8k/**',NULL,'4k8k充值-按钮',NULL,NULL,NULL,'button',NULL,0,'2022-05-23 10:49:02','2022-07-11 14:07:12'),
 	 (1539180121783533569,'',1523596353794473986,'/api/rest/oms/external/audio/push/stream/**',NULL,'音视频推流计费-按钮',NULL,NULL,NULL,'button',NULL,0,'2022-06-21 17:35:12','2022-07-11 14:07:12');
+```
+#  音视频推流计费  
 
-===================================== 音视频推流计费 =====================================
--- 进度 
+#  Win SDK支持4K 8K 
 
--- 菜单：是否需要修改 -- 父菜单是 SDK-计费配置
+#  HotFix 
 
-===================================== Win SDK支持4K 8K =====================================
--- 上线
-
--- 菜单
-
--- 进度
--- 疑问
-
-===================================== OMS 等保测评 =====================================
--- 已废弃
-
-===================================== HotFix =====================================
+## sql变更
+``` sql
 -- 隐私政策Bug
 ALTER TABLE oms.t_policies_agreements MODIFY COLUMN `type` tinyint(4) NULL COMMENT '类型，0-隐私政策，1-服务协议';
 ALTER TABLE oms.t_policies_agreements MODIFY COLUMN status tinyint(4) NOT NULL COMMENT '发布状态，0-待发布，1-已发布，2-已下架';
-
-getAllFields(Class<?>):获取该类的所有属性列表
-getTableInfo(Class<?>):获取实体映射表信息
-getTableInfo(String):根据表名获取实体映射表信息
+```
